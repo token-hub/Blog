@@ -1,16 +1,42 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SearchCode } from "lucide-react";
-import { Link } from "react-router";
+import { Link, redirect } from "react-router";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { loginSchema } from "@/lib/validators";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginDefaultValues } from "@/lib/constants";
+import { z } from "zod";
 
 const Login = () => {
+    const {
+        register,
+        handleSubmit,
+        formState: { isSubmitting },
+    } = useForm<z.infer<typeof loginSchema>>({
+        resolver: zodResolver(loginSchema),
+        defaultValues: loginDefaultValues,
+    });
+
+    const onSubmit: SubmitHandler<z.infer<typeof loginSchema>> = async (data) => {
+        try {
+            const result = { success: true };
+
+            if (result.success) {
+                redirect("/");
+            }
+        } catch (err) {
+            // to do
+        }
+    };
+
     return (
         <div className="h-dvh">
             <div className="h-full flex justify-center items-center h-minus-header">
-                <form onSubmit={() => {}} className="w-full max-w-sm">
+                <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-sm">
                     <Card>
                         <CardHeader className="space-y-2 place-items-center">
                             <Link to="/" className="hover:cursor-pointer">
@@ -24,7 +50,7 @@ const Login = () => {
                                     <Label htmlFor="email">
                                         Email <span className="text-red-700">*</span>
                                     </Label>
-                                    <Input type="email" placeholder="email@gmail.com" />
+                                    <Input {...register("email")} type="email" placeholder="email@gmail.com" />
                                 </div>
                                 <div className="grid gap-2">
                                     <div className="flex items-center">
@@ -32,13 +58,13 @@ const Login = () => {
                                             Password <span className="text-red-700">*</span>
                                         </Label>
                                     </div>
-                                    <Input type="password" placeholder="********" />
+                                    <Input {...register("password")} type="password" placeholder="********" />
                                 </div>
                             </div>
                         </CardContent>
                         <CardFooter className="flex-col gap-2">
-                            <Button disabled={false} type="submit" className="w-full hover:cursor-pointer">
-                                {false && <Spinner />} Login
+                            <Button disabled={isSubmitting} type="submit" className="w-full hover:cursor-pointer">
+                                {isSubmitting && <Spinner />} Login
                             </Button>
 
                             <Link to="/register" className="text-sm text-center text-muted-foreground">
