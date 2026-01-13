@@ -4,18 +4,18 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/compon
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
 
 const Header = () => {
     const navigate = useNavigate();
+    const auth = useSelector((state: RootState) => state.user.auth);
 
     function handleLogout() {
         supabase.auth.signOut();
         navigate("/login");
     }
 
-    const session = {
-        user: true,
-    };
     return (
         <div className="border-b">
             <div className="wrapper">
@@ -28,7 +28,7 @@ const Header = () => {
                     </Link>
 
                     <div className="hidden md:flex items-center">
-                        {session?.user ? (
+                        {auth?.user ? (
                             <>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
@@ -36,7 +36,7 @@ const Header = () => {
                                             variant="outline"
                                             className="border bg-yellow-500 text-white hover:bg-white hover:border-yellow-500 hover:text-yellow-500"
                                         >
-                                            John
+                                            {auth?.user.email?.split("@")[0]}
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="w-56 p-2" align="start">
