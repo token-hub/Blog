@@ -15,7 +15,8 @@ const Login = () => {
     const {
         register,
         handleSubmit,
-        formState: { isSubmitting },
+        setError,
+        formState: { errors, isSubmitting },
     } = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
         defaultValues: loginDefaultValues,
@@ -29,7 +30,11 @@ const Login = () => {
                 redirect("/");
             }
         } catch (err) {
-            // to do
+            if (err instanceof Error) {
+                setError("root", { message: err.message });
+            } else {
+                setError("root", { message: "Something went wrong" });
+            }
         }
     };
 
@@ -51,6 +56,7 @@ const Login = () => {
                                         Email <span className="text-red-700">*</span>
                                     </Label>
                                     <Input {...register("email")} type="email" placeholder="email@gmail.com" />
+                                    {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
                                 </div>
                                 <div className="grid gap-2">
                                     <div className="flex items-center">
@@ -59,7 +65,9 @@ const Login = () => {
                                         </Label>
                                     </div>
                                     <Input {...register("password")} type="password" placeholder="********" />
+                                    {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
                                 </div>
+                                {errors.root && <div className="text-sm text-destructive">{errors.root.message}</div>}
                             </div>
                         </CardContent>
                         <CardFooter className="flex-col gap-2">
