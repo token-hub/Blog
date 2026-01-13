@@ -1,10 +1,12 @@
 import "./App.css";
-import { Button } from "@/components/ui/button";
+
+import { router } from "../router";
+import { RouterProvider } from "react-router";
 
 function App() {
     return (
         <>
-            <Button variant="outline">Button</Button>
+            <RouterProvider router={router} />
         </>
     );
 }
