@@ -15,7 +15,8 @@ const Register = () => {
     const {
         register,
         handleSubmit,
-        formState: { isSubmitting },
+        setError,
+        formState: { errors, isSubmitting },
     } = useForm<z.infer<typeof registerSchema>>({
         resolver: zodResolver(registerSchema),
         defaultValues: registerDefaultValues,
@@ -30,7 +31,11 @@ const Register = () => {
             }
         } catch (err) {
             console.log(err);
-            // to do
+            if (err instanceof Error) {
+                setError("root", { message: err.message });
+            } else {
+                setError("root", { message: "Something went wrong" });
+            }
         }
     };
     return (
@@ -51,6 +56,7 @@ const Register = () => {
                                         Email <span className="text-red-700">*</span>
                                     </Label>
                                     <Input {...register("email")} type="email" placeholder="email@gmail.com" />
+                                    {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
                                 </div>
                                 <div className="grid gap-2">
                                     <div className="flex items-center">
@@ -59,6 +65,7 @@ const Register = () => {
                                         </Label>
                                     </div>
                                     <Input {...register("password")} type="password" placeholder="********" />
+                                    {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
                                 </div>
                                 <div className="grid gap-2">
                                     <div className="flex items-center">
@@ -67,11 +74,14 @@ const Register = () => {
                                         </Label>
                                     </div>
                                     <Input {...register("confirmPassword")} type="password" placeholder="********" />
+
+                                    {errors.confirmPassword && <p className="text-sm text-red-500">{errors.confirmPassword.message}</p>}
                                 </div>
+                                {errors.root && <div className="text-sm text-destructive">{errors.root.message}</div>}
                             </div>
                         </CardContent>
                         <CardFooter className="flex-col gap-2">
-                            <Button disabled={isSubmitting} type="submit" className="w-full hover:cursor-pointer">
+                            <Button disabled={false} type="submit" className="w-full hover:cursor-pointer">
                                 {isSubmitting && <Spinner />} Submit
                             </Button>
 
