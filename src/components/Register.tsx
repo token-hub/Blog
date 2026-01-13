@@ -1,6 +1,6 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Link, redirect } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { SearchCode } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,8 +10,11 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { registerSchema } from "@/lib/validators";
 import { registerDefaultValues } from "@/lib/constants";
 import { z } from "zod";
+import { supabase } from "@/lib/supabase";
 
 const Register = () => {
+    const navigate = useNavigate();
+
     const {
         register,
         handleSubmit,
@@ -22,13 +25,22 @@ const Register = () => {
         defaultValues: registerDefaultValues,
     });
 
-    const onSubmit: SubmitHandler<z.infer<typeof registerSchema>> = async (data) => {
+    const onSubmit: SubmitHandler<z.infer<typeof registerSchema>> = async (fields) => {
         try {
-            const result = { success: true };
+            const { data, error } = await supabase.auth.signUp({
+                email: fields.email,
+                password: fields.password,
+                options: {
+                    emailRedirectTo: "/my-blogs",
+                },
+            });
 
-            if (result.success) {
-                redirect("/");
+            if (error) {
+                throw new Error(error.message);
             }
+
+            // to do, add user and session to redux
+            navigate("/");
         } catch (err) {
             console.log(err);
             if (err instanceof Error) {
