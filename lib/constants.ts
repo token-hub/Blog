@@ -1,4 +1,10 @@
 export const loginDefaultValues = {
-    email: "",
-    password: "",
+    email: "john@gmail.com",
+    password: "asdasd",
+};
+
+export const registerDefaultValues = {
+    email: "john@gmail.com",
+    password: "asdasd",
+    confirmPassword: "asdasd",
 };
