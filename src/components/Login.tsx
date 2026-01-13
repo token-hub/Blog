@@ -1,7 +1,7 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SearchCode } from "lucide-react";
-import { Link, redirect, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
@@ -11,9 +11,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginDefaultValues } from "@/lib/constants";
 import { z } from "zod";
 import { supabase } from "@/lib/supabase";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/redux/slices/userSlice";
 
 const Login = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const {
         register,
@@ -36,7 +39,7 @@ const Login = () => {
                 throw new Error(error.message);
             }
 
-            // to do, add user and session to redux
+            dispatch(setUser(data));
             navigate("/");
         } catch (err) {
             if (err instanceof Error) {
