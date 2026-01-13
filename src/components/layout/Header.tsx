@@ -4,15 +4,19 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/compon
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
+import { resetState } from "@/redux/slices/userSlice";
 
 const Header = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const auth = useSelector((state: RootState) => state.user.auth);
 
     function handleLogout() {
         supabase.auth.signOut();
+        dispatch(resetState());
         navigate("/login");
     }
 
