@@ -4,7 +4,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 type authType = {
     user: User | null;
-    session: Session | null;
+    session?: Session | null;
 };
 
 type userSliceState = {
