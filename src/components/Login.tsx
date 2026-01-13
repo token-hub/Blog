@@ -1,7 +1,7 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SearchCode } from "lucide-react";
-import { Link, redirect } from "react-router";
+import { Link, redirect, useNavigate } from "react-router";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
@@ -10,8 +10,11 @@ import { loginSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginDefaultValues } from "@/lib/constants";
 import { z } from "zod";
+import { supabase } from "@/lib/supabase";
 
 const Login = () => {
+    const navigate = useNavigate();
+
     const {
         register,
         handleSubmit,
@@ -22,13 +25,19 @@ const Login = () => {
         defaultValues: loginDefaultValues,
     });
 
-    const onSubmit: SubmitHandler<z.infer<typeof loginSchema>> = async (data) => {
+    const onSubmit: SubmitHandler<z.infer<typeof loginSchema>> = async (fields) => {
         try {
-            const result = { success: true };
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: fields.email,
+                password: fields.password,
+            });
 
-            if (result.success) {
-                redirect("/");
+            if (error) {
+                throw new Error(error.message);
             }
+
+            // to do, add user and session to redux
+            navigate("/");
         } catch (err) {
             if (err instanceof Error) {
                 setError("root", { message: err.message });
