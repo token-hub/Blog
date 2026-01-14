@@ -1,4 +1,5 @@
 import Blogs from "./blogs";
+import CreateBlogDialog from "./CreateBlogDialog";
 
 const blogs = [
     {
@@ -18,6 +19,10 @@ const blogs = [
 const MyBlogs = () => {
     return (
         <div className="wrapper">
+            <div className="flex justify-end">
+                <CreateBlogDialog />
+            </div>
+
             <div className="flex items-center justify-center flex-col">
                 {blogs.length > 0 ? <Blogs blogs={blogs} /> : <div className="text-2xl mt-6">Login and create your own blogs :D </div>}
             </div>
