@@ -21,17 +21,22 @@ export const getBlogsCount = createAsyncThunk("blogs/getBlogsCount", async (user
     }
 });
 
-export const getBlogs = createAsyncThunk("blogs/getBlogs", async (page: number, thunkApi) => {
+export const getBlogs = createAsyncThunk("blogs/getBlogs", async ({ page, user_id }: { page: number; user_id?: string }, thunkApi) => {
     try {
         const offset = (page - 1) * BLOG_LIMIT;
-
-        const { data, error } = await supabase
+        let query = supabase
             .from("blogs")
             .select("blog, created_at, id, title, user_id")
             .eq("isDeleted", false)
             .order("created_at", { ascending: false }) // newest first
             .limit(BLOG_LIMIT)
             .range(offset, offset + BLOG_LIMIT - 1);
+
+        if (user_id) {
+            query = query.eq("user_id", user_id);
+        }
+
+        const { data, error } = await query;
         if (error) throw error;
         return data;
     } catch (error: any) {

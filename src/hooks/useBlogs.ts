@@ -17,8 +17,8 @@ export const useBlogs = ({ user }: { user: User | null }) => {
     }, [dispatch, user?.id]);
 
     useEffect(() => {
-        dispatch(getBlogs(+page));
-    }, [dispatch, page]);
+        dispatch(getBlogs({ page: +page, user_id: user?.id }));
+    }, [dispatch, page, user?.id]);
 
     return { blogs, totalCount, loading };
 };
