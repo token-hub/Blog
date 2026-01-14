@@ -3,7 +3,7 @@ import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogT
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { blogDialogDefaultValues } from "@/lib/constants";
+import { blogDialogDefaultValues, SET_BLOGS_COUNT } from "@/lib/constants";
 import { blogSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
@@ -13,15 +13,18 @@ import { Spinner } from "@/components/ui/spinner";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/redux/store";
 import { setModal } from "@/redux/slices/modalSlice";
-import { setBlog } from "@/redux/slices/blogSlice";
+import { setBlog, setBlogsCount } from "@/redux/slices/blogSlice";
 import { useEffect } from "react";
-import { insertBlog, updateBlog } from "@/redux/action-creators/blogActions";
+import { getBlogs, insertBlog, updateBlog } from "@/redux/action-creators/blogActions";
+import { useSearchParams } from "react-router";
 
 const CreateBlogDialog = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { open } = useSelector((state: RootState) => state.modal);
     const auth = useSelector((state: RootState) => state.user.auth);
     const { selectedBlog } = useSelector((state: RootState) => state.blog);
+    const [searchParams] = useSearchParams();
+    const page = searchParams.get("page") ?? 1;
 
     const {
         register,
@@ -58,6 +61,8 @@ const CreateBlogDialog = () => {
                         blog: data.blog,
                     })
                 ).unwrap();
+
+                await dispatch(getBlogs(+page));
             } else {
                 await dispatch(
                     insertBlog({
@@ -66,6 +71,11 @@ const CreateBlogDialog = () => {
                         blog: data.blog,
                     })
                 ).unwrap();
+                dispatch(setBlogsCount(SET_BLOGS_COUNT[0]));
+
+                if (page === 1) {
+                    await dispatch(getBlogs(+page));
+                }
             }
 
             handleClose();

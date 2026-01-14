@@ -60,57 +60,6 @@ export const blogSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
-            .addCase(insertBlog.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(insertBlog.fulfilled, (state, action: PayloadAction<blogType>) => {
-                state.loading = false;
-                state.blogs?.unshift(action.payload);
-            })
-            .addCase(insertBlog.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload;
-            })
-            .addCase(updateBlog.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(updateBlog.fulfilled, (state, action: PayloadAction<blogType>) => {
-                state.loading = false;
-
-                if (state.blogs) {
-                    state.blogs = state.blogs?.map((blog) => {
-                        if (blog.id === action.payload.id) {
-                            return action.payload;
-                        } else {
-                            return blog;
-                        }
-                    });
-                }
-            })
-            .addCase(updateBlog.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload;
-            })
-            .addCase(deleteBlog.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(deleteBlog.fulfilled, (state, action) => {
-                state.loading = false;
-                if (state.blogs) {
-                    state.blogs = state.blogs?.filter((blog) => {
-                        if (blog.id !== action.payload.id) {
-                            return action.payload;
-                        }
-                    });
-                }
-            })
-            .addCase(deleteBlog.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload;
-            })
             .addCase(getBlogsCount.fulfilled, (state, action) => {
                 if (action?.payload) {
                     state.totalCount = action?.payload;
