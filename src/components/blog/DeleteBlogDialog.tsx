@@ -1,13 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/spinner";
+import { deleteBlog } from "@/redux/action-creators/blogActions";
 import { setBlog } from "@/redux/slices/blogSlice";
 import { setDeleteModal } from "@/redux/slices/modalSlice";
 import type { AppDispatch, RootState } from "@/redux/store";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { useTransition } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const DeleteBlogDialog = () => {
+    const [isPending, startTransition] = useTransition();
+    const auth = useSelector((state: RootState) => state.user.auth);
     const dispatch = useDispatch<AppDispatch>();
     const { selectedBlog } = useSelector((state: RootState) => state.blog);
     const { deleteModalOpen } = useSelector((state: RootState) => state.modal);
@@ -24,7 +28,22 @@ const DeleteBlogDialog = () => {
     };
 
     async function handleSubmit() {
-        // todo
+        startTransition(async () => {
+            try {
+                if (selectedBlog) {
+                    await dispatch(
+                        deleteBlog({
+                            user_id: auth.user!.id,
+                            id: selectedBlog.id,
+                        })
+                    ).unwrap();
+
+                    handleClose();
+                }
+            } catch (err) {
+                // add toast
+            }
+        });
     }
 
     return (

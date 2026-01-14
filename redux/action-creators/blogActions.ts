@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { supabase } from "../../lib/supabase";
 import { ERROR_CODES, ERROR_CODES_DESCRIPTION, TABLES } from "@/lib/constants";
-import type { insertBlogType, updateBlogType } from "@/lib/types";
+import type { insertBlogType, updateBlogType, deleteBlogType } from "@/lib/types";
 
 export const getBlogs = createAsyncThunk("blogs/getBlogs", async (_, thunkApi) => {
     try {
@@ -71,6 +71,29 @@ export const updateBlog = createAsyncThunk("blogs/updateBlog", async (fields: up
             } else {
                 throw new Error(error.message);
             }
+        }
+
+        return data;
+    } catch (error: any) {
+        const message = error.message;
+        return thunkApi.rejectWithValue(message);
+    }
+});
+
+export const deleteBlog = createAsyncThunk("blogs/deleteBlog", async (fields: deleteBlogType, thunkApi) => {
+    try {
+        const { data, error } = await supabase
+            .from(TABLES[0])
+            .update({
+                user_id: fields.user_id,
+                isDeleted: true,
+            })
+            .eq("id", fields.id)
+            .select("id")
+            .single();
+
+        if (error) {
+            throw new Error(error.message);
         }
 
         return data;
