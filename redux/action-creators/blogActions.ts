@@ -3,7 +3,7 @@ import { supabase } from "../../lib/supabase";
 
 export const getBlogs = createAsyncThunk("blogs/getBlogs", async (_, thunkApi) => {
     try {
-        const { data, error } = await supabase.from("blogs").select("blog, created_at, id, title");
+        const { data, error } = await supabase.from("blogs").select("blog, created_at, id, title, user_id");
         if (error) throw error;
         return data;
     } catch (error: any) {
@@ -14,7 +14,7 @@ export const getBlogs = createAsyncThunk("blogs/getBlogs", async (_, thunkApi) =
 
 export const getBlog = createAsyncThunk("blogs/getBlog", async (blogId: string, thunkApi) => {
     try {
-        const { data, error } = await supabase.from("blogs").select("blog, created_at, id, title").eq("id", blogId).single();
+        const { data, error } = await supabase.from("blogs").select("blog, created_at, id, title, user_id").eq("id", blogId).single();
         if (error) throw error;
         return data;
     } catch (error: any) {
