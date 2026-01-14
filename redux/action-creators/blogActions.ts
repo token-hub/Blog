@@ -3,14 +3,35 @@ import { supabase } from "../../lib/supabase";
 import { ERROR_CODES, ERROR_CODES_DESCRIPTION, TABLES, BLOG_LIMIT } from "@/lib/constants";
 import type { insertBlogType, updateBlogType, deleteBlogType } from "@/lib/types";
 
-export const getBlogs = createAsyncThunk("blogs/getBlogs", async (_, thunkApi) => {
+export const getBlogsCount = createAsyncThunk("blogs/getBlogsCount", async (user_id: string | undefined, thunkApi) => {
     try {
+        let query = supabase.from("blogs").select("*", { count: "exact", head: true }).eq("isDeleted", false);
+
+        if (user_id) {
+            query = query.eq("user_id", user_id);
+        }
+
+        const { count, error } = await query;
+
+        if (error) throw error;
+        return count;
+    } catch (error: any) {
+        const message = error.message;
+        return thunkApi.rejectWithValue(message);
+    }
+});
+
+export const getBlogs = createAsyncThunk("blogs/getBlogs", async (page: number, thunkApi) => {
+    try {
+        const offset = (page - 1) * BLOG_LIMIT;
+
         const { data, error } = await supabase
             .from("blogs")
             .select("blog, created_at, id, title, user_id")
             .eq("isDeleted", false)
             .order("created_at", { ascending: false }) // newest first
-            .limit(BLOG_LIMIT);
+            .limit(BLOG_LIMIT)
+            .range(offset, offset + BLOG_LIMIT - 1);
         if (error) throw error;
         return data;
     } catch (error: any) {

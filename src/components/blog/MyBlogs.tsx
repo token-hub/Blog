@@ -1,19 +1,27 @@
 import { useDispatch, useSelector } from "react-redux";
 import Blogs from "./blogs";
 import CreateBlogDialog from "./CreateBlogDialog";
-import { getBlogs } from "@/redux/action-creators/blogActions";
+import { getBlogs, getBlogsCount } from "@/redux/action-creators/blogActions";
 import { useEffect } from "react";
 import type { RootState, AppDispatch } from "@/redux/store";
 import DeleteBlogDialog from "./DeleteBlogDialog";
 import BlogPagination from "../Pagination";
+import { useSearchParams } from "react-router";
 
 const MyBlogs = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const { blogs } = useSelector((state: RootState) => state.blog);
+    const { user } = useSelector((state: RootState) => state.user.auth);
+    const { blogs, totalCount } = useSelector((state: RootState) => state.blog);
+    const [searchParams] = useSearchParams();
+    const page = searchParams.get("page") ?? 1;
 
     useEffect(() => {
-        dispatch(getBlogs());
-    }, [dispatch]);
+        dispatch(getBlogsCount(user?.id));
+    }, [dispatch, user?.id]);
+
+    useEffect(() => {
+        dispatch(getBlogs(+page));
+    }, [dispatch, page]);
 
     return (
         <div className="wrapper">
@@ -26,7 +34,7 @@ const MyBlogs = () => {
                 {blogs && blogs.length > 0 ? (
                     <>
                         <Blogs blogs={blogs} />
-                        <BlogPagination totalCount={10} />
+                        <BlogPagination totalCount={totalCount} />
                     </>
                 ) : (
                     <div className="text-2xl mt-6">Login and create your own blogs :D </div>
