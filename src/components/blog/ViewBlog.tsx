@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import Loader from "../Loader";
 import { capitalizedFirstLetter, transformDate } from "@/lib/utils";
+import { setBlog } from "@/redux/slices/blogSlice";
 
 const ViewBlog = () => {
     const params = useParams<{ blog_id: string }>();
@@ -15,6 +16,10 @@ const ViewBlog = () => {
         if (params.blog_id) {
             dispatch(getBlog(params.blog_id));
         }
+
+        return () => {
+            dispatch(setBlog(null));
+        };
     }, [dispatch, params]);
 
     if (loading || !selectedBlog) {
