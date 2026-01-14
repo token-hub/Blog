@@ -45,6 +45,7 @@ const DeleteBlogDialog = () => {
                     await dispatch(getBlogs({ page: +page, user_id: auth.user!.id }));
                     dispatch(setBlogsCount(SET_BLOGS_COUNT[1]));
                     handleClose();
+                    dispatch(setBlog(null));
                     customToast({ text: "Blog successfully deleted" });
                 }
             } catch (err) {
