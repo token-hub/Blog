@@ -10,10 +10,15 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { registerSchema } from "@/lib/validators";
 import { registerDefaultValues } from "@/lib/constants";
 import { z } from "zod";
-import { supabase } from "@/lib/supabase";
+
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "@/redux/store";
+import { registerUser } from "@/redux/action-creators/userActions";
+import { customToast } from "@/lib/utils";
 
 const Register = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
 
     const {
         register,
@@ -27,20 +32,14 @@ const Register = () => {
 
     const onSubmit: SubmitHandler<z.infer<typeof registerSchema>> = async (fields) => {
         try {
-            const { data, error } = await supabase.auth.signUp({
-                email: fields.email,
-                password: fields.password,
-                options: {
-                    emailRedirectTo: "/my-blogs",
-                },
-            });
-
-            if (error) {
-                throw new Error(error.message);
-            }
-
-            // to do, add user and session to redux
-            navigate("/");
+            await dispatch(
+                registerUser({
+                    email: fields.email,
+                    password: fields.password,
+                })
+            );
+            customToast({ text: "Successfully registered" });
+            navigate("/blogs?page=1");
         } catch (err) {
             console.log(err);
             if (err instanceof Error) {
