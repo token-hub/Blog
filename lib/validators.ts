@@ -15,6 +15,6 @@ export const registerSchema = loginSchema
     });
 
 export const blogSchema = z.object({
-    title: z.string(),
-    blog: z.string(),
+    title: z.string().nonempty("Title is required"),
+    blog: z.string().nonempty("Blog content is required"),
 });
