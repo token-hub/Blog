@@ -14,21 +14,43 @@ import { Spinner } from "@/components/ui/spinner";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/redux/store";
 import { setModal } from "@/redux/slices/modalSlice";
+import { setBlog } from "@/redux/slices/blogSlice";
+import { useEffect } from "react";
 
 const CreateBlogDialog = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { open } = useSelector((state: RootState) => state.modal);
-
     const auth = useSelector((state: RootState) => state.user.auth);
+    const { selectedBlog } = useSelector((state: RootState) => state.blog);
+
     const {
         register,
         handleSubmit,
         setError,
+        reset,
         formState: { errors, isSubmitting },
     } = useForm<z.infer<typeof blogSchema>>({
         resolver: zodResolver(blogSchema),
-        defaultValues: blogDialogDefaultValues,
+        defaultValues: selectedBlog
+            ? {
+                  title: selectedBlog?.title,
+                  blog: selectedBlog.blog,
+              }
+            : blogDialogDefaultValues,
     });
+
+    useEffect(() => {
+        if (open && selectedBlog) {
+            reset({
+                title: selectedBlog.title,
+                blog: selectedBlog.blog,
+            });
+        }
+
+        if (open && !selectedBlog) {
+            reset(blogDialogDefaultValues); // new blog
+        }
+    }, [open, selectedBlog, reset]);
 
     const onSubmit: SubmitHandler<z.infer<typeof blogSchema>> = async (fields) => {
         try {
@@ -69,6 +91,7 @@ const CreateBlogDialog = () => {
     const handleOpenChange = (value: boolean) => {
         if (!value) {
             handleClose();
+            dispatch(setBlog(null));
         }
     };
 

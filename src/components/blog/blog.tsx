@@ -5,14 +5,30 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { Pencil } from "lucide-react";
 import { Link } from "react-router";
-import type { RootState } from "@/redux/store";
-import { useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { setBlog } from "@/redux/slices/blogSlice";
+import { setModal } from "@/redux/slices/modalSlice";
 
 const Blog = ({ id, title, created_at, blog, user_id }: blogType) => {
+    const dispatch = useDispatch<AppDispatch>();
     const { auth } = useSelector((state: RootState) => state.user);
+    const { selectedBlog } = useSelector((state: RootState) => state.blog);
     const isOwner = user_id === auth.user?.id;
 
-    console.log({ isOwner }, auth, user_id);
+    function handleEdit() {
+        dispatch(
+            setBlog({
+                id,
+                title,
+                created_at,
+                blog,
+                user_id,
+            })
+        );
+        dispatch(setModal(true));
+    }
+
     return (
         <Card className="w-3/4 hover:shadow-xl hover:cursor-pointer mb-4">
             <CardContent>
@@ -28,7 +44,7 @@ const Blog = ({ id, title, created_at, blog, user_id }: blogType) => {
                         <Button size="sm" type="button">
                             <Trash2 />
                         </Button>
-                        <Button size="sm" type="button">
+                        <Button size="sm" type="button" onClick={handleEdit}>
                             <Pencil />
                         </Button>
                     </div>
