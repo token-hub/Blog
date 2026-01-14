@@ -80,7 +80,7 @@ const CreateBlogDialog = () => {
                 }
                 customToast({ text: "New Blog created" });
             }
-
+            dispatch(setBlog(null));
             handleClose();
         } catch (err) {
             if (err instanceof Error) {
