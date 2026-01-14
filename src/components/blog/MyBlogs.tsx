@@ -7,11 +7,12 @@ import type { RootState, AppDispatch } from "@/redux/store";
 import DeleteBlogDialog from "./DeleteBlogDialog";
 import BlogPagination from "../Pagination";
 import { useSearchParams } from "react-router";
+import Loader from "../Loader";
 
 const MyBlogs = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { user } = useSelector((state: RootState) => state.user.auth);
-    const { blogs, totalCount } = useSelector((state: RootState) => state.blog);
+    const { blogs, totalCount, loading } = useSelector((state: RootState) => state.blog);
     const [searchParams] = useSearchParams();
     const page = searchParams.get("page") ?? 1;
 
@@ -22,6 +23,10 @@ const MyBlogs = () => {
     useEffect(() => {
         dispatch(getBlogs(+page));
     }, [dispatch, page]);
+
+    if (loading) {
+        return <Loader />;
+    }
 
     return (
         <div className="wrapper">
