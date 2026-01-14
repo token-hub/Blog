@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { getUser } from "@/redux/action-creators/userActions";
 import type { AppDispatch } from "@/redux/store";
+import { ToastContainer } from "react-toastify";
 
 function App() {
     const dispatch = useDispatch<AppDispatch>();
@@ -18,6 +19,7 @@ function App() {
     return (
         <>
             <RouterProvider router={router} />
+            <ToastContainer />
         </>
     );
 }
