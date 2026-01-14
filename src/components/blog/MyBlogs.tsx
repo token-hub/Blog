@@ -1,12 +1,17 @@
-import { supabase } from "@/lib/supabase";
+import { useDispatch, useSelector } from "react-redux";
 import Blogs from "./blogs";
 import CreateBlogDialog from "./CreateBlogDialog";
-import { use } from "react";
-
-const blogPromise = supabase.from("blogs").select("blog, created_at, id, title");
+import { getBlogs } from "@/redux/action-creators/blogActions";
+import { useEffect } from "react";
+import type { RootState, AppDispatch } from "@/redux/store";
 
 const MyBlogs = () => {
-    const { data } = use(blogPromise);
+    const dispatch = useDispatch<AppDispatch>();
+    const { blogs } = useSelector((state: RootState) => state.blog);
+
+    useEffect(() => {
+        dispatch(getBlogs());
+    }, [dispatch]);
 
     return (
         <div className="wrapper">
@@ -15,7 +20,7 @@ const MyBlogs = () => {
             </div>
 
             <div className="flex items-center justify-center flex-col">
-                {data && data.length > 0 ? <Blogs blogs={data} /> : <div className="text-2xl mt-6">Login and create your own blogs :D </div>}
+                {blogs && blogs.length > 0 ? <Blogs blogs={blogs} /> : <div className="text-2xl mt-6">Login and create your own blogs :D </div>}
             </div>
         </div>
     );
