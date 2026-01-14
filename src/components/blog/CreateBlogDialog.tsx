@@ -63,7 +63,7 @@ const CreateBlogDialog = () => {
                     })
                 ).unwrap();
 
-                await dispatch(getBlogs(+page));
+                await dispatch(getBlogs({ page: +page, user_id: auth.user!.id }));
                 customToast({ text: "Blog successfully updated" });
             } else {
                 await dispatch(
@@ -76,7 +76,7 @@ const CreateBlogDialog = () => {
                 dispatch(setBlogsCount(SET_BLOGS_COUNT[0]));
 
                 if (page === 1) {
-                    await dispatch(getBlogs(+page));
+                    await dispatch(getBlogs({ page: +page, user_id: auth.user!.id }));
                 }
                 customToast({ text: "New Blog created" });
             }
