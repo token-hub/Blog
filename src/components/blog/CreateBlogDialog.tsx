@@ -17,6 +17,7 @@ import { setBlog, setBlogsCount } from "@/redux/slices/blogSlice";
 import { useEffect } from "react";
 import { getBlogs, insertBlog, updateBlog } from "@/redux/action-creators/blogActions";
 import { useSearchParams } from "react-router";
+import { customToast } from "@/lib/utils";
 
 const CreateBlogDialog = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -63,6 +64,7 @@ const CreateBlogDialog = () => {
                 ).unwrap();
 
                 await dispatch(getBlogs(+page));
+                customToast({ text: "Blog successfully updated" });
             } else {
                 await dispatch(
                     insertBlog({
@@ -76,6 +78,7 @@ const CreateBlogDialog = () => {
                 if (page === 1) {
                     await dispatch(getBlogs(+page));
                 }
+                customToast({ text: "New Blog created" });
             }
 
             handleClose();
