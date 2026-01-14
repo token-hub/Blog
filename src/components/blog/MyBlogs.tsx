@@ -30,7 +30,7 @@ const MyBlogs = () => {
                         <BlogPagination totalCount={totalCount} />
                     </>
                 ) : (
-                    <div className="text-2xl mt-6">Login and create your own blogs :D </div>
+                    <div className="text-2xl mt-6">No Blogs Found </div>
                 )}
             </div>
         </div>
