@@ -1,25 +1,29 @@
+import { useSelector } from "react-redux";
 import Blogs from "./blog/blogs";
-
-const blogs = [
-    {
-        id: "1",
-        title: "I am a title",
-        date: "December 21, 2021",
-        blog: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae harum in explicabo asperiores unde necessitatibus laborum nihil? Cumque fuga minima consectetur, impedit laudantium, officiis consequuntur suscipit facilis expedita pariatur alias? Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae harum in explicabo asperiores unde necessitatibus laborum nihil? Cumque fuga minima consectetur, impedit laudantium, officiis consequuntur suscipit facilis expedita pariatur alias?",
-    },
-    {
-        id: "2",
-        title: "I am a title",
-        date: "December 21, 2021",
-        blog: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae harum in explicabo asperiores unde necessitatibus laborum nihil? Cumque fuga minima consectetur, impedit laudantium, officiis consequuntur suscipit facilis expedita pariatur alias? Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae harum in explicabo asperiores unde necessitatibus laborum nihil? Cumque fuga minima consectetur, impedit laudantium, officiis consequuntur suscipit facilis expedita pariatur alias?",
-    },
-];
+import type { RootState } from "@/redux/store";
+import { useBlogs } from "../hooks/useBlogs";
+import BlogPagination from "./Pagination";
+import Loader from "./Loader";
 
 const Home = () => {
+    const { user } = useSelector((state: RootState) => state.user.auth);
+    const { blogs, totalCount, loading } = useBlogs({ user });
+
+    if (loading) {
+        return <Loader />;
+    }
+
     return (
         <div className="wrapper">
             <div className="flex items-center justify-center flex-col">
-                {blogs.length > 0 ? <Blogs blogs={blogs} /> : <div className="text-2xl mt-6">Login and create your own blogs :D </div>}
+                {blogs && blogs.length > 0 ? (
+                    <>
+                        <Blogs blogs={blogs} />
+                        <BlogPagination totalCount={totalCount} />
+                    </>
+                ) : (
+                    <div className="text-2xl mt-6">Login and create your own blogs :D </div>
+                )}
             </div>
         </div>
     );
