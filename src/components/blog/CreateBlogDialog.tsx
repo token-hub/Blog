@@ -3,19 +3,19 @@ import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogT
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { blogDialogDefaultValues, ERROR_CODES, ERROR_CODES_DESCRIPTION } from "@/lib/constants";
-import { supabase } from "@/lib/supabase";
+import { blogDialogDefaultValues } from "@/lib/constants";
 import { blogSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type z from "zod";
-import { TABLES } from "@/lib/constants";
+
 import { Spinner } from "@/components/ui/spinner";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/redux/store";
 import { setModal } from "@/redux/slices/modalSlice";
 import { setBlog } from "@/redux/slices/blogSlice";
 import { useEffect } from "react";
+import { insertBlog } from "@/redux/action-creators/blogActions";
 
 const CreateBlogDialog = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -52,25 +52,16 @@ const CreateBlogDialog = () => {
         }
     }, [open, selectedBlog, reset]);
 
-    const onSubmit: SubmitHandler<z.infer<typeof blogSchema>> = async (fields) => {
+    const onSubmit: SubmitHandler<z.infer<typeof blogSchema>> = async (data) => {
         try {
-            const { error } = await supabase.from(TABLES[0]).insert({
-                title: fields.title,
-                blog: fields.blog,
-                user_id: auth.user?.id,
-            });
-
-            if (error) {
-                if (error.code === ERROR_CODES[0]) {
-                    throw new Error(ERROR_CODES_DESCRIPTION[0]);
-                } else {
-                    throw new Error(error.message);
-                }
-            }
-
-            if (closeRef.current) {
-                closeRef.current.click();
-            }
+            await dispatch(
+                insertBlog({
+                    user_id: auth.user!.id,
+                    title: data.title,
+                    blog: data.blog,
+                })
+            ).unwrap();
+            handleClose();
         } catch (err) {
             if (err instanceof Error) {
                 setError("root", { message: err.message });
