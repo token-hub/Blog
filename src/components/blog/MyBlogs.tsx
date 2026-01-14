@@ -5,6 +5,7 @@ import { getBlogs } from "@/redux/action-creators/blogActions";
 import { useEffect } from "react";
 import type { RootState, AppDispatch } from "@/redux/store";
 import DeleteBlogDialog from "./DeleteBlogDialog";
+import BlogPagination from "../Pagination";
 
 const MyBlogs = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -22,7 +23,14 @@ const MyBlogs = () => {
             </div>
 
             <div className="flex items-center justify-center flex-col">
-                {blogs && blogs.length > 0 ? <Blogs blogs={blogs} /> : <div className="text-2xl mt-6">Login and create your own blogs :D </div>}
+                {blogs && blogs.length > 0 ? (
+                    <>
+                        <Blogs blogs={blogs} />
+                        <BlogPagination totalCount={10} />
+                    </>
+                ) : (
+                    <div className="text-2xl mt-6">Login and create your own blogs :D </div>
+                )}
             </div>
         </div>
     );
