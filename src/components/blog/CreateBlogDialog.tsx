@@ -11,12 +11,14 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import type z from "zod";
 import { TABLES } from "@/lib/constants";
 import { Spinner } from "@/components/ui/spinner";
-import { useRef } from "react";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "@/redux/store";
+import { setModal } from "@/redux/slices/modalSlice";
 
 const CreateBlogDialog = () => {
-    const closeRef = useRef<HTMLButtonElement>(null);
+    const dispatch = useDispatch<AppDispatch>();
+    const { open } = useSelector((state: RootState) => state.modal);
+
     const auth = useSelector((state: RootState) => state.user.auth);
     const {
         register,
@@ -56,11 +58,25 @@ const CreateBlogDialog = () => {
         }
     };
 
+    function handleAdd() {
+        dispatch(setModal(true));
+    }
+
+    function handleClose() {
+        dispatch(setModal(false));
+    }
+
+    const handleOpenChange = (value: boolean) => {
+        if (!value) {
+            handleClose();
+        }
+    };
+
     return (
         <>
-            <Dialog>
+            <Dialog open={open} onOpenChange={handleOpenChange}>
                 <DialogTrigger asChild>
-                    <Button>Add</Button>
+                    <Button onClick={handleAdd}>Add</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-md">
                     <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-sm">
@@ -90,7 +106,7 @@ const CreateBlogDialog = () => {
 
                         <DialogFooter className="mt-3">
                             <DialogClose asChild>
-                                <Button type="button" variant="secondary" ref={closeRef}>
+                                <Button type="button" variant="secondary" onClick={handleClose}>
                                     Close
                                 </Button>
                             </DialogClose>
