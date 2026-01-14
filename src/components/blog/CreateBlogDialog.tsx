@@ -15,7 +15,7 @@ import type { AppDispatch, RootState } from "@/redux/store";
 import { setModal } from "@/redux/slices/modalSlice";
 import { setBlog } from "@/redux/slices/blogSlice";
 import { useEffect } from "react";
-import { insertBlog } from "@/redux/action-creators/blogActions";
+import { insertBlog, updateBlog } from "@/redux/action-creators/blogActions";
 
 const CreateBlogDialog = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -31,12 +31,7 @@ const CreateBlogDialog = () => {
         formState: { errors, isSubmitting },
     } = useForm<z.infer<typeof blogSchema>>({
         resolver: zodResolver(blogSchema),
-        defaultValues: selectedBlog
-            ? {
-                  title: selectedBlog?.title,
-                  blog: selectedBlog.blog,
-              }
-            : blogDialogDefaultValues,
+        defaultValues: blogDialogDefaultValues,
     });
 
     useEffect(() => {
@@ -54,13 +49,25 @@ const CreateBlogDialog = () => {
 
     const onSubmit: SubmitHandler<z.infer<typeof blogSchema>> = async (data) => {
         try {
-            await dispatch(
-                insertBlog({
-                    user_id: auth.user!.id,
-                    title: data.title,
-                    blog: data.blog,
-                })
-            ).unwrap();
+            if (selectedBlog) {
+                await dispatch(
+                    updateBlog({
+                        user_id: auth.user!.id,
+                        id: selectedBlog.id,
+                        title: data.title,
+                        blog: data.blog,
+                    })
+                ).unwrap();
+            } else {
+                await dispatch(
+                    insertBlog({
+                        user_id: auth.user!.id,
+                        title: data.title,
+                        blog: data.blog,
+                    })
+                ).unwrap();
+            }
+
             handleClose();
         } catch (err) {
             if (err instanceof Error) {

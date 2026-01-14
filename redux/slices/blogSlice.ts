@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { blogType, blogsType } from "../../lib/types";
-import { getBlogs, getBlog, insertBlog } from "../action-creators/blogActions";
+import { getBlogs, getBlog, insertBlog, updateBlog } from "../action-creators/blogActions";
 
 type blogSliceType = {
     blogs: blogsType;
@@ -64,9 +64,30 @@ export const blogSlice = createSlice({
             })
             .addCase(insertBlog.fulfilled, (state, action: PayloadAction<blogType>) => {
                 state.loading = false;
-                state.blogs?.push(action.payload);
+                state.blogs?.unshift(action.payload);
             })
             .addCase(insertBlog.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+            .addCase(updateBlog.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(updateBlog.fulfilled, (state, action: PayloadAction<blogType>) => {
+                state.loading = false;
+
+                if (state.blogs) {
+                    state.blogs = state.blogs?.map((blog) => {
+                        if (blog.id === action.payload.id) {
+                            return action.payload;
+                        } else {
+                            return blog;
+                        }
+                    });
+                }
+            })
+            .addCase(updateBlog.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             });
