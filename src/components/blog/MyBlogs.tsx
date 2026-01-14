@@ -1,22 +1,13 @@
+import { supabase } from "@/lib/supabase";
 import Blogs from "./blogs";
 import CreateBlogDialog from "./CreateBlogDialog";
+import { use } from "react";
 
-const blogs = [
-    {
-        id: "1",
-        title: "I am a title",
-        date: "December 21, 2021",
-        blog: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae harum in explicabo asperiores unde necessitatibus laborum nihil? Cumque fuga minima consectetur, impedit laudantium, officiis consequuntur suscipit facilis expedita pariatur alias? Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae harum in explicabo asperiores unde necessitatibus laborum nihil? Cumque fuga minima consectetur, impedit laudantium, officiis consequuntur suscipit facilis expedita pariatur alias?",
-    },
-    {
-        id: "2",
-        title: "I am a title",
-        date: "December 21, 2021",
-        blog: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae harum in explicabo asperiores unde necessitatibus laborum nihil? Cumque fuga minima consectetur, impedit laudantium, officiis consequuntur suscipit facilis expedita pariatur alias? Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae harum in explicabo asperiores unde necessitatibus laborum nihil? Cumque fuga minima consectetur, impedit laudantium, officiis consequuntur suscipit facilis expedita pariatur alias?",
-    },
-];
+const blogPromise = supabase.from("blogs").select("blog, created_at, id, title");
 
 const MyBlogs = () => {
+    const { data } = use(blogPromise);
+
     return (
         <div className="wrapper">
             <div className="flex justify-end">
@@ -24,7 +15,7 @@ const MyBlogs = () => {
             </div>
 
             <div className="flex items-center justify-center flex-col">
-                {blogs.length > 0 ? <Blogs blogs={blogs} /> : <div className="text-2xl mt-6">Login and create your own blogs :D </div>}
+                {data && data.length > 0 ? <Blogs blogs={data} /> : <div className="text-2xl mt-6">Login and create your own blogs :D </div>}
             </div>
         </div>
     );
