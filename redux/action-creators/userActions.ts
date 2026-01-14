@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { supabase } from "../../lib/supabase";
-import { createUserType } from "@/lib/types";
+import type { createUserType } from "@/lib/types";
 
 export const getUser = createAsyncThunk("users/getUser", async (_, thunkApi) => {
     try {
