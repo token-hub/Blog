@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/spinner";
-import { SET_BLOGS_COUNT } from "@/lib/constants";
+import { SET_BLOGS_COUNT, TOAST_TYPE } from "@/lib/constants";
+import { customToast } from "@/lib/utils";
 import { deleteBlog, getBlogs } from "@/redux/action-creators/blogActions";
 import { setBlog, setBlogsCount } from "@/redux/slices/blogSlice";
 import { setDeleteModal } from "@/redux/slices/modalSlice";
@@ -44,9 +45,10 @@ const DeleteBlogDialog = () => {
                     await dispatch(getBlogs(+page));
                     dispatch(setBlogsCount(SET_BLOGS_COUNT[1]));
                     handleClose();
+                    customToast({ text: "Blog successfully deleted" });
                 }
             } catch (err) {
-                // add toast
+                customToast({ text: "Something went wrong", type: TOAST_TYPE[1] });
             }
         });
     }
