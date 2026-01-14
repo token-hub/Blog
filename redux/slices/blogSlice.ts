@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { blogType, blogsType } from "../../lib/types";
-import { getBlogs, getBlog, insertBlog, updateBlog, deleteBlog, getBlogsCount } from "../action-creators/blogActions";
+import type { blogType, blogsType, setBlogsCountType } from "../../lib/types";
+import { getBlogs, getBlog, getBlogsCount } from "../action-creators/blogActions";
+import { SET_BLOGS_COUNT } from "@/lib/constants";
 
 type blogSliceType = {
     blogs: blogsType;
@@ -28,6 +29,15 @@ export const blogSlice = createSlice({
         },
         setBlogs: (state, action: PayloadAction<blogsType>) => {
             state.blogs = action.payload;
+        },
+        setBlogsCount: (state, action: PayloadAction<setBlogsCountType>) => {
+            if (action.payload === SET_BLOGS_COUNT[0]) {
+                state.totalCount = state.totalCount + 1;
+            }
+
+            if (action.payload === SET_BLOGS_COUNT[1]) {
+                state.totalCount = state.totalCount - 1;
+            }
         },
         resetState: (state) => {
             state.selectedBlog = initialState.selectedBlog;
@@ -68,6 +78,6 @@ export const blogSlice = createSlice({
     },
 });
 
-export const { setBlog, setBlogs, resetState } = blogSlice.actions;
+export const { setBlog, setBlogs, resetState, setBlogsCount } = blogSlice.actions;
 
 export default blogSlice.reducer;
