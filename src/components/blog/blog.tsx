@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { capitalizedFirstLetter, transformDate } from "@/lib/utils";
+import { capitalizedFirstLetter, transformDate, truncateText } from "@/lib/utils";
 import type { blogType } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
@@ -13,7 +13,6 @@ import { setModal, setDeleteModal } from "@/redux/slices/modalSlice";
 const Blog = ({ id, title, created_at, blog, user_id }: blogType) => {
     const dispatch = useDispatch<AppDispatch>();
     const { auth } = useSelector((state: RootState) => state.user);
-    const { selectedBlog } = useSelector((state: RootState) => state.blog);
     const isOwner = user_id === auth.user?.id;
 
     function handleSetBlog() {
@@ -46,7 +45,7 @@ const Blog = ({ id, title, created_at, blog, user_id }: blogType) => {
                         <h1 className="text-4xl mb-4">{capitalizedFirstLetter(title)}</h1>
                     </div>
                     <p className="text-gray mb-4">{transformDate(created_at)}</p>
-                    <p className="leading-6">{blog}</p>
+                    <p className="leading-6"> {truncateText(blog)}</p>
                 </Link>
                 {isOwner && (
                     <div className="flex gap-2 justify-end mt-2">

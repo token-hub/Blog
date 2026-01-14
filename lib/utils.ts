@@ -20,3 +20,7 @@ export function transformDate(iso: string) {
         day: "numeric",
     });
 }
+
+export function truncateText(text: string, length: number = 200) {
+    return text.slice(0, length) + "...";
+}
