@@ -10,6 +10,7 @@ type authType = {
 
 type userSliceState = {
     auth: authType;
+    loading: boolean;
 };
 
 const initialState: userSliceState = {
@@ -17,6 +18,7 @@ const initialState: userSliceState = {
         user: null,
         session: null,
     },
+    loading: true,
 };
 
 export const userSlice = createSlice({
@@ -31,9 +33,17 @@ export const userSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(getUser.fulfilled, (state, action: PayloadAction<authType>) => {
-            state.auth = action.payload;
-        });
+        builder
+            .addCase(getUser.fulfilled, (state, action: PayloadAction<authType>) => {
+                state.auth = action.payload;
+                state.loading = false;
+            })
+            .addCase(getUser.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(getUser.rejected, (state) => {
+                state.loading = false;
+            });
     },
 });
 
