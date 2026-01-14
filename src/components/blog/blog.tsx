@@ -8,7 +8,7 @@ import { Link } from "react-router";
 import type { AppDispatch, RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { setBlog } from "@/redux/slices/blogSlice";
-import { setModal } from "@/redux/slices/modalSlice";
+import { setModal, setDeleteModal } from "@/redux/slices/modalSlice";
 
 const Blog = ({ id, title, created_at, blog, user_id }: blogType) => {
     const dispatch = useDispatch<AppDispatch>();
@@ -16,7 +16,7 @@ const Blog = ({ id, title, created_at, blog, user_id }: blogType) => {
     const { selectedBlog } = useSelector((state: RootState) => state.blog);
     const isOwner = user_id === auth.user?.id;
 
-    function handleEdit() {
+    function handleSetBlog() {
         dispatch(
             setBlog({
                 id,
@@ -26,7 +26,16 @@ const Blog = ({ id, title, created_at, blog, user_id }: blogType) => {
                 user_id,
             })
         );
+    }
+
+    function handleEdit() {
+        handleSetBlog();
         dispatch(setModal(true));
+    }
+
+    function handleDelete() {
+        handleSetBlog();
+        dispatch(setDeleteModal(true));
     }
 
     return (
@@ -41,7 +50,7 @@ const Blog = ({ id, title, created_at, blog, user_id }: blogType) => {
                 </Link>
                 {isOwner && (
                     <div className="flex gap-2 justify-end mt-2">
-                        <Button size="sm" type="button">
+                        <Button size="sm" type="button" onClick={handleDelete}>
                             <Trash2 />
                         </Button>
                         <Button size="sm" type="button" onClick={handleEdit}>

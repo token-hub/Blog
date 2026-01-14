@@ -4,6 +4,7 @@ import CreateBlogDialog from "./CreateBlogDialog";
 import { getBlogs } from "@/redux/action-creators/blogActions";
 import { useEffect } from "react";
 import type { RootState, AppDispatch } from "@/redux/store";
+import DeleteBlogDialog from "./DeleteBlogDialog";
 
 const MyBlogs = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -17,6 +18,7 @@ const MyBlogs = () => {
         <div className="wrapper">
             <div className="flex justify-end">
                 <CreateBlogDialog />
+                <DeleteBlogDialog />
             </div>
 
             <div className="flex items-center justify-center flex-col">
