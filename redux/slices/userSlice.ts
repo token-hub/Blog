@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { User, Session } from "@supabase/supabase-js";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { getUser } from "../action-creators/userActions";
 
 type authType = {
     user: User | null;
@@ -19,7 +20,7 @@ const initialState: userSliceState = {
 };
 
 export const userSlice = createSlice({
-    name: "counter",
+    name: "user",
     initialState,
     reducers: {
         setUser: (state, action: PayloadAction<authType>) => {
@@ -28,6 +29,11 @@ export const userSlice = createSlice({
         resetState: (state) => {
             state.auth = initialState.auth;
         },
+    },
+    extraReducers: (builder) => {
+        builder.addCase(getUser.fulfilled, (state, action: PayloadAction<authType>) => {
+            state.auth = action.payload;
+        });
     },
 });
 
