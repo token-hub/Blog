@@ -3,7 +3,7 @@ import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogT
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { blogDialogDefaultValues } from "@/lib/constants";
+import { blogDialogDefaultValues, ERROR_CODES, ERROR_CODES_DESCRIPTION } from "@/lib/constants";
 import { supabase } from "@/lib/supabase";
 import { blogSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,7 +22,7 @@ const CreateBlogDialog = () => {
         register,
         handleSubmit,
         setError,
-        formState: { isSubmitting },
+        formState: { errors, isSubmitting },
     } = useForm<z.infer<typeof blogSchema>>({
         resolver: zodResolver(blogSchema),
         defaultValues: blogDialogDefaultValues,
@@ -37,7 +37,11 @@ const CreateBlogDialog = () => {
             });
 
             if (error) {
-                throw new Error(error.message);
+                if (error.code === ERROR_CODES[0]) {
+                    throw new Error(ERROR_CODES_DESCRIPTION[0]);
+                } else {
+                    throw new Error(error.message);
+                }
             }
 
             if (closeRef.current) {
@@ -70,6 +74,7 @@ const CreateBlogDialog = () => {
                                     Title <span className="text-red-700 mb-2">*</span>
                                 </Label>
                                 <Input {...register("title")} type="text" placeholder="blog" />
+                                {errors.title && <p className="text-sm text-red-500">{errors.title.message}</p>}
                             </div>
 
                             <div>
@@ -77,7 +82,10 @@ const CreateBlogDialog = () => {
                                     Blog <span className="text-red-700 mb-2">*</span>
                                 </Label>
                                 <Textarea {...register("blog")} placeholder="Type your message blog." />
+                                {errors.blog && <p className="text-sm text-red-500">{errors.blog.message}</p>}
                             </div>
+
+                            {errors.root && <div className="text-sm text-destructive">{errors.root.message}</div>}
                         </div>
 
                         <DialogFooter className="mt-3">
