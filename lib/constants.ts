@@ -8,3 +8,10 @@ export const registerDefaultValues = {
     password: "asdasd",
     confirmPassword: "asdasd",
 };
+
+export const blogDialogDefaultValues = {
+    title: "",
+    blog: "",
+};
+
+export const TABLES = ["blogs"] as const;

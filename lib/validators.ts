@@ -13,3 +13,8 @@ export const registerSchema = loginSchema
         message: "Passwords don't match",
         path: ["confirmPassword"],
     });
+
+export const blogSchema = z.object({
+    title: z.string(),
+    blog: z.string(),
+});

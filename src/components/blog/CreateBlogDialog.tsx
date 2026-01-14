@@ -3,8 +3,55 @@ import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogT
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { blogDialogDefaultValues } from "@/lib/constants";
+import { supabase } from "@/lib/supabase";
+import { blogSchema } from "@/lib/validators";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import type z from "zod";
+import { TABLES } from "@/lib/constants";
+import { Spinner } from "@/components/ui/spinner";
+import { useRef } from "react";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
 
 const CreateBlogDialog = () => {
+    const closeRef = useRef<HTMLButtonElement>(null);
+    const auth = useSelector((state: RootState) => state.user.auth);
+    const {
+        register,
+        handleSubmit,
+        setError,
+        formState: { isSubmitting },
+    } = useForm<z.infer<typeof blogSchema>>({
+        resolver: zodResolver(blogSchema),
+        defaultValues: blogDialogDefaultValues,
+    });
+
+    const onSubmit: SubmitHandler<z.infer<typeof blogSchema>> = async (fields) => {
+        try {
+            const { error } = await supabase.from(TABLES[0]).insert({
+                title: fields.title,
+                blog: fields.blog,
+                user_id: auth.user?.id,
+            });
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            if (closeRef.current) {
+                closeRef.current.click();
+            }
+        } catch (err) {
+            if (err instanceof Error) {
+                setError("root", { message: err.message });
+            } else {
+                setError("root", { message: "Something went wrong" });
+            }
+        }
+    };
+
     return (
         <>
             <Dialog>
@@ -12,33 +59,39 @@ const CreateBlogDialog = () => {
                     <Button>Add</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-md">
-                    <DialogHeader>
-                        <DialogTitle>Create new blog</DialogTitle>
-                    </DialogHeader>
-                    <form onSubmit={() => {}} className="w-full max-w-sm">
-                        <div className="grid gap-2">
+                    <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-sm">
+                        <DialogHeader>
+                            <DialogTitle>Create new blog</DialogTitle>
+                        </DialogHeader>
+
+                        <div className="grid gap-2 mt-3">
                             <div>
                                 <Label htmlFor="title">
                                     Title <span className="text-red-700 mb-2">*</span>
                                 </Label>
-                                <Input type="title" placeholder="blog" />
+                                <Input {...register("title")} type="text" placeholder="blog" />
                             </div>
 
                             <div>
                                 <Label htmlFor="blog">
                                     Blog <span className="text-red-700 mb-2">*</span>
                                 </Label>
-                                <Textarea placeholder="Type your message blog." />
+                                <Textarea {...register("blog")} placeholder="Type your message blog." />
                             </div>
                         </div>
-                    </form>
-                    <DialogFooter className="sm:justify-start">
-                        <DialogClose asChild>
-                            <Button type="button" variant="secondary">
-                                Close
+
+                        <DialogFooter className="mt-3">
+                            <DialogClose asChild>
+                                <Button type="button" variant="secondary" ref={closeRef}>
+                                    Close
+                                </Button>
+                            </DialogClose>
+
+                            <Button disabled={isSubmitting} type="submit" className="hover:cursor-pointer">
+                                {isSubmitting && <Spinner />} Submit
                             </Button>
-                        </DialogClose>
-                    </DialogFooter>
+                        </DialogFooter>
+                    </form>
                 </DialogContent>
             </Dialog>
         </>
