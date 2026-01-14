@@ -7,13 +7,19 @@ import BlogPagination from "../Pagination";
 
 import Loader from "../Loader";
 import { useBlogs } from "@/src/hooks/useBlogs";
+import { useNavigate } from "react-router";
 
 const MyBlogs = () => {
+    const navigate = useNavigate();
     const { user } = useSelector((state: RootState) => state.user.auth);
     const { blogs, totalCount, loading } = useBlogs({ user });
 
     if (loading) {
         return <Loader />;
+    }
+
+    if (!loading && !user) {
+        navigate("/login");
     }
 
     return (
