@@ -12,3 +12,11 @@ export function capitalizedFirstLetter(text: string) {
 
     return text.charAt(0).toUpperCase() + text.slice(1);
 }
+
+export function transformDate(iso: string) {
+    return new Date(iso).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+}
