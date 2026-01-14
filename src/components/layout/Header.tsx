@@ -24,12 +24,20 @@ const Header = () => {
         <div className="border-b">
             <div className="wrapper">
                 <div className="flex justify-between items-center">
-                    <Link to="/">
-                        <p className="flex">
-                            <SearchCode className="mr-2 text-yellow-500" />
-                            <span className="text-lg font-bold">{`Let's review`}</span>
-                        </p>
-                    </Link>
+                    <div className="flex items-center">
+                        <Link to="/" className="pr-2">
+                            <p className="flex">
+                                <SearchCode className="mr-2 text-yellow-500" />
+                                <span className="text-lg font-bold">{`iBlog`}</span>
+                            </p>
+                        </Link>
+
+                        {auth?.user && (
+                            <Link to="/blogs" className="pl-3 font-bold border-l ">
+                                Blogs
+                            </Link>
+                        )}
+                    </div>
 
                     <div className="hidden md:flex items-center">
                         {auth?.user ? (
