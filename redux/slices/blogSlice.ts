@@ -21,7 +21,7 @@ export const blogSlice = createSlice({
     name: "blog",
     initialState,
     reducers: {
-        setBlog: (state, action: PayloadAction<blogType>) => {
+        setBlog: (state, action: PayloadAction<blogType | null>) => {
             state.selectedBlog = action.payload;
         },
         setBlogs: (state, action: PayloadAction<blogsType>) => {
