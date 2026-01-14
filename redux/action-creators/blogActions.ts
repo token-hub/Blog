@@ -1,11 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { supabase } from "../../lib/supabase";
-import { ERROR_CODES, ERROR_CODES_DESCRIPTION, TABLES } from "@/lib/constants";
+import { ERROR_CODES, ERROR_CODES_DESCRIPTION, TABLES, BLOG_LIMIT } from "@/lib/constants";
 import type { insertBlogType, updateBlogType, deleteBlogType } from "@/lib/types";
 
 export const getBlogs = createAsyncThunk("blogs/getBlogs", async (_, thunkApi) => {
     try {
-        const { data, error } = await supabase.from("blogs").select("blog, created_at, id, title, user_id");
+        const { data, error } = await supabase
+            .from("blogs")
+            .select("blog, created_at, id, title, user_id")
+            .eq("isDeleted", false)
+            .order("created_at", { ascending: false }) // newest first
+            .limit(BLOG_LIMIT);
         if (error) throw error;
         return data;
     } catch (error: any) {
