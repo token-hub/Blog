@@ -1,13 +1,10 @@
-import { useSelector } from "react-redux";
 import Blogs from "./blog/blogs";
-import type { RootState } from "@/redux/store";
 import { useBlogs } from "../hooks/useBlogs";
 import BlogPagination from "./Pagination";
 import Loader from "./Loader";
 
 const Home = () => {
-    const { user } = useSelector((state: RootState) => state.user.auth);
-    const { blogs, totalCount, loading } = useBlogs({ user });
+    const { blogs, totalCount, loading } = useBlogs({ user: null });
 
     if (loading) {
         return <Loader />;
