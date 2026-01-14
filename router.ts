@@ -12,6 +12,7 @@ export const router = createBrowserRouter([
         Component: MainLayout,
         children: [
             { index: true, Component: Home },
+            { path: ":blog_id", Component: ViewBlog },
             {
                 path: "blogs",
                 children: [
