@@ -17,7 +17,7 @@ const ViewBlog = () => {
         }
     }, [dispatch, params]);
 
-    if (loading) {
+    if (loading || !selectedBlog) {
         return <Loader />;
     }
 
