@@ -42,7 +42,7 @@ const DeleteBlogDialog = () => {
                             id: selectedBlog.id,
                         })
                     ).unwrap();
-                    await dispatch(getBlogs(+page));
+                    await dispatch(getBlogs({ page: +page }));
                     dispatch(setBlogsCount(SET_BLOGS_COUNT[1]));
                     handleClose();
                     customToast({ text: "Blog successfully deleted" });
