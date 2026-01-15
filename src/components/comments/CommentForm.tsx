@@ -19,6 +19,7 @@ const Comments = () => {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors, isSubmitting },
     } = useForm<z.infer<typeof commentSchema>>({
         resolver: zodResolver(commentSchema),
@@ -34,6 +35,8 @@ const Comments = () => {
                     blog_id: selectedBlog?.id as string,
                 })
             );
+
+            reset();
         } catch (error) {
             customToast({ text: "Something went wrong" });
         }
