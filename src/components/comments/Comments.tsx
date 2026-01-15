@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { getComments } from "@/redux/action-creators/commentActions";
 import Loader from "../Loader";
 import SingleComment from "./SingleComment";
+import EditCommentModal from "./EditCommentModal";
 
 const Comments = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -20,6 +21,7 @@ const Comments = () => {
 
     return (
         <div className="mt-4">
+            <EditCommentModal />
             <h2 className="text-2xl font-bold">Comments</h2>
             <hr className="my-3" />
             <CommentForm />
