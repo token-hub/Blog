@@ -30,7 +30,7 @@ const ViewBlog = () => {
     return (
         <div className="w-2/4 mx-auto mt-6 pt-4 pb-8">
             {selectedBlog?.image_url && (
-                <div className="mb-4">
+                <div className="mb-4 flex justify-center">
                     <img src={selectedBlog?.image_url} alt={selectedBlog.title} className="w-160 h-100 object-cover rounded-xl"></img>
                 </div>
             )}
