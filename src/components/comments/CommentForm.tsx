@@ -4,8 +4,9 @@ import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { customToast } from "@/lib/utils";
 import { commentSchema } from "@/lib/validators";
-import { createComment } from "@/redux/action-creators/commentActions";
+import { createComment, getComments } from "@/redux/action-creators/commentActions";
 import type { AppDispatch, RootState } from "@/redux/store";
+import { usePage } from "@/src/hooks/usePage";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@radix-ui/react-label";
 import { useForm, type SubmitHandler } from "react-hook-form";
@@ -14,6 +15,7 @@ import type z from "zod";
 
 const Comments = () => {
     const dispatch = useDispatch<AppDispatch>();
+    const page = usePage();
     const auth = useSelector((state: RootState) => state.user.auth);
     const { selectedBlog } = useSelector((state: RootState) => state.blog);
     const {
@@ -35,7 +37,7 @@ const Comments = () => {
                     blog_id: selectedBlog?.id as string,
                 })
             );
-
+            await dispatch(getComments({ page, blog_id: selectedBlog?.id as string }));
             reset();
         } catch (error) {
             customToast({ text: "Something went wrong" });
