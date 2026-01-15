@@ -4,7 +4,7 @@ import type { blogType, blogsType, setBlogsCountType } from "../../lib/types";
 import { getBlogs, getBlog, getBlogsCount } from "../action-creators/blogActions";
 import { SET_BLOGS_COUNT } from "@/lib/constants";
 
-type blogSliceType = {
+export type blogSliceType = {
     blogs: blogsType;
     selectedBlog: blogType | null;
     totalCount: number;
