@@ -9,11 +9,11 @@ export type commentType = {
     comment: string;
     user: userViewType;
     image_url?: string | null;
-} | null;
+};
 
 type commentSliceType = {
     comments: commentType[];
-    selectedComment: commentType;
+    selectedComment: commentType | null;
     loading: boolean;
     error: unknown;
 };
