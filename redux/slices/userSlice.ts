@@ -3,6 +3,11 @@ import type { User, Session } from "@supabase/supabase-js";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { getUser, loginUser } from "../action-creators/userActions";
 
+export type userViewType = {
+    id: string | null;
+    email: string | null;
+};
+
 type authType = {
     user: User | null;
     session?: Session | null;
