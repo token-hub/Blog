@@ -23,3 +23,5 @@ export const ERROR_CODES_DESCRIPTION = ["A blog with this title already exists"]
 export const BLOG_LIMIT = 3;
 export const SET_BLOGS_COUNT = ["increment", "decrement"] as const;
 export const TOAST_TYPE = ["success", "error"] as const;
+
+export const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_NAME;

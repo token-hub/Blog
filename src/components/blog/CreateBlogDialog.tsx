@@ -62,7 +62,6 @@ const CreateBlogDialog = () => {
                         blog: data.blog,
                     })
                 ).unwrap();
-
                 await dispatch(getBlogs({ page: +page, user_id: auth.user!.id }));
                 customToast({ text: "Blog successfully updated" });
             } else {
@@ -71,6 +70,7 @@ const CreateBlogDialog = () => {
                         user_id: auth.user!.id,
                         title: data.title,
                         blog: data.blog,
+                        image: data.image ? data.image[0] : undefined,
                     })
                 ).unwrap();
                 dispatch(setBlogsCount(SET_BLOGS_COUNT[0]));
@@ -80,6 +80,7 @@ const CreateBlogDialog = () => {
                 }
                 customToast({ text: "New Blog created" });
             }
+
             dispatch(setBlog(null));
             handleClose();
         } catch (err) {
@@ -125,6 +126,12 @@ const CreateBlogDialog = () => {
                                 </Label>
                                 <Input {...register("title")} type="text" placeholder="blog" />
                                 {errors.title && <p className="text-sm text-red-500">{errors.title.message}</p>}
+                            </div>
+
+                            <div>
+                                <Label htmlFor="title">Image</Label>
+                                <Input {...register("image")} type="file" placeholder="image" />
+                                {errors.image && <p className="text-sm text-red-500">{errors.image.message}</p>}
                             </div>
 
                             <div>
