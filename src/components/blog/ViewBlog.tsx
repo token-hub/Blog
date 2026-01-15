@@ -21,7 +21,7 @@ const ViewBlog = () => {
         return () => {
             dispatch(setBlog(null));
         };
-    }, [dispatch, params]);
+    }, [dispatch, params.blog_id]);
 
     if (loading || !selectedBlog) {
         return <Loader />;
