@@ -123,7 +123,7 @@ const CreateBlogDialog = () => {
                         <div className="grid gap-2 mt-3">
                             {selectedBlog?.image_url && (
                                 <div className="">
-                                    <img src={selectedBlog?.image_url} alt={selectedBlog.title} width="500" height="600"></img>
+                                    <img src={selectedBlog?.image_url} alt={selectedBlog.title} className="w-125 h-80 object-cover rounded-xl"></img>
                                 </div>
                             )}
 
