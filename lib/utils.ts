@@ -24,6 +24,7 @@ export function transformDate(iso: string) {
 }
 
 export function truncateText(text: string, length: number = 200) {
+    if (text.length < length) return text;
     return text.slice(0, length) + "...";
 }
 
