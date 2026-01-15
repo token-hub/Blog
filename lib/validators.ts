@@ -19,3 +19,8 @@ export const blogSchema = z.object({
     blog: z.string().nonempty("Blog content is required"),
     image: z.custom<FileList>().optional(),
 });
+
+export const commentSchema = z.object({
+    comment: z.string().nonempty("Comment is required"),
+    image: z.custom<FileList>().optional(),
+});

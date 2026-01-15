@@ -6,6 +6,7 @@ import { useParams } from "react-router";
 import Loader from "../Loader";
 import { capitalizedFirstLetter, transformDate } from "@/lib/utils";
 import { setBlog } from "@/redux/slices/blogSlice";
+import Comments from "../comments/Comments";
 
 const ViewBlog = () => {
     const params = useParams<{ blog_id: string }>();
@@ -37,6 +38,8 @@ const ViewBlog = () => {
             <h1 className="text-4xl mb-4">{capitalizedFirstLetter(selectedBlog!.title)}</h1>
             <p className="text-gray mb-4">{transformDate(selectedBlog!.created_at)}</p>
             <p className="leading-6">{selectedBlog!.blog}</p>
+
+            <Comments />
         </div>
     );
 };
