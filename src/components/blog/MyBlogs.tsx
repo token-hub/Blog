@@ -8,6 +8,7 @@ import BlogPagination from "../Pagination";
 import Loader from "../Loader";
 import { useBlogs } from "@/src/hooks/useBlogs";
 import { useNavigate } from "react-router";
+import { PAGINATION_IDENTIFIER } from "@/lib/constants";
 
 const MyBlogs = () => {
     const navigate = useNavigate();
@@ -33,7 +34,7 @@ const MyBlogs = () => {
                 {blogs && blogs.length > 0 ? (
                     <>
                         <Blogs blogs={blogs} />
-                        <BlogPagination totalCount={totalCount} />
+                        <BlogPagination identifier={PAGINATION_IDENTIFIER[0]} totalCount={totalCount} />
                     </>
                 ) : (
                     <div className="text-2xl mt-6">No Blogs Found </div>
