@@ -27,13 +27,7 @@ export const getBlogs = createAsyncThunk("blogs/getBlogs", async ({ page, user_i
         const offset = (page - 1) * BLOG_LIMIT;
         let query = supabase
             .from("blogs")
-            .select(
-                `blog, created_at, id, title, user_id, image_url, 
-                    comments (id, comment, created_at, image_url, 
-                        user: user_profiles (id, email)
-                    ) 
-                `
-            )
+            .select("blog, created_at, id, title, user_id, image_url")
             .eq("isDeleted", false)
             .order("created_at", { ascending: false })
             .limit(BLOG_LIMIT)
