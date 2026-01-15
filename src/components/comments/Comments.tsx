@@ -30,7 +30,7 @@ const Comments = () => {
             {loading && <Loader />}
             {!loading && comments.length < 1 ? (
                 <div className="flex justify-center items-center">
-                    <hr className="my-3" />
+                    <hr className="my-8 mb-24" />
                     <h3 className="text-2xl">No Comments Found</h3>
                 </div>
             ) : (
