@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { transformDate } from "@/lib/utils";
 import { setComment, type commentType } from "@/redux/slices/commentSlice";
-import { setCommentModal } from "@/redux/slices/modalSlice";
+import { setCommentDeleteModal, setCommentModal } from "@/redux/slices/modalSlice";
 import type { AppDispatch, RootState } from "@/redux/store";
 import { Pencil, Trash2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,7 +10,11 @@ const SingleComment = ({ comment }: { comment: commentType }) => {
     const dispatch = useDispatch<AppDispatch>();
     const { auth } = useSelector((state: RootState) => state.user);
     const isOwner = comment.user.id === auth.user?.id;
-    function handleDelete() {}
+
+    function handleDelete() {
+        dispatch(setComment(comment));
+        dispatch(setCommentDeleteModal(true));
+    }
 
     function handleEdit() {
         dispatch(setCommentModal(true));
