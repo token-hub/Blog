@@ -26,7 +26,7 @@ export const getBlogs = createAsyncThunk("blogs/getBlogs", async ({ page, user_i
         const offset = (page - 1) * BLOG_LIMIT;
         let query = supabase
             .from("blogs")
-            .select("blog, created_at, id, title, user_id")
+            .select("blog, created_at, id, title, user_id, image_url")
             .eq("isDeleted", false)
             .order("created_at", { ascending: false }) // newest first
             .limit(BLOG_LIMIT)
@@ -47,7 +47,7 @@ export const getBlogs = createAsyncThunk("blogs/getBlogs", async ({ page, user_i
 
 export const getBlog = createAsyncThunk("blogs/getBlog", async (blogId: string, thunkApi) => {
     try {
-        const { data, error } = await supabase.from("blogs").select("blog, created_at, id, title, user_id").eq("id", blogId).single();
+        const { data, error } = await supabase.from("blogs").select("blog, created_at, id, title, user_id, image_url").eq("id", blogId).single();
         if (error) throw error;
         return data;
     } catch (error: any) {
