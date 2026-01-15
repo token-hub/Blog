@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setBlog } from "@/redux/slices/blogSlice";
 import { setModal, setDeleteModal } from "@/redux/slices/modalSlice";
 
-const Blog = ({ id, title, created_at, blog, user_id }: blogType) => {
+const Blog = ({ id, title, created_at, blog, user_id, image_url }: blogType) => {
     const dispatch = useDispatch<AppDispatch>();
     const { auth } = useSelector((state: RootState) => state.user);
     const isOwner = user_id === auth.user?.id;
@@ -23,6 +23,7 @@ const Blog = ({ id, title, created_at, blog, user_id }: blogType) => {
                 created_at,
                 blog,
                 user_id,
+                image_url,
             })
         );
     }

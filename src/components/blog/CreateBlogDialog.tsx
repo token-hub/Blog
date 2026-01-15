@@ -47,7 +47,7 @@ const CreateBlogDialog = () => {
         }
 
         if (open && !selectedBlog) {
-            reset(blogDialogDefaultValues); // new blog
+            reset(blogDialogDefaultValues);
         }
     }, [open, selectedBlog, reset]);
 
@@ -60,6 +60,7 @@ const CreateBlogDialog = () => {
                         id: selectedBlog.id,
                         title: data.title,
                         blog: data.blog,
+                        image: data.image ? data.image[0] : undefined,
                     })
                 ).unwrap();
                 await dispatch(getBlogs({ page: +page, user_id: auth.user!.id }));
@@ -116,10 +117,16 @@ const CreateBlogDialog = () => {
                 <DialogContent className="sm:max-w-md">
                     <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-sm">
                         <DialogHeader>
-                            <DialogTitle>Create new blog</DialogTitle>
+                            <DialogTitle>{selectedBlog?.id ? "Edit" : "Create new"} blog</DialogTitle>
                         </DialogHeader>
 
                         <div className="grid gap-2 mt-3">
+                            {selectedBlog?.image_url && (
+                                <div className="">
+                                    <img src={selectedBlog?.image_url} alt={selectedBlog.title} width="500" height="600"></img>
+                                </div>
+                            )}
+
                             <div>
                                 <Label htmlFor="title">
                                     Title <span className="text-red-700 mb-2">*</span>
@@ -129,7 +136,9 @@ const CreateBlogDialog = () => {
                             </div>
 
                             <div>
-                                <Label htmlFor="title">Image</Label>
+                                <Label htmlFor="title" className="mb-2">
+                                    {selectedBlog?.image_url ? "Upload new image" : "Image"}
+                                </Label>
                                 <Input {...register("image")} type="file" placeholder="image" />
                                 {errors.image && <p className="text-sm text-red-500">{errors.image.message}</p>}
                             </div>
