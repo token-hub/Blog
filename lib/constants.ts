@@ -1,6 +1,9 @@
+const email = import.meta.env.VITE_EMAIL;
+const password = import.meta.env.VITE_PASSWORD;
+
 export const loginDefaultValues = {
-    email: "",
-    password: "",
+    email: email || "",
+    password: password || "",
 };
 
 export const registerDefaultValues = {
