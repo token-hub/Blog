@@ -28,5 +28,6 @@ export const BLOG_LIMIT = 3;
 export const COMMENT_LIMIT = 3;
 export const SET_BLOGS_COUNT = ["increment", "decrement"] as const;
 export const TOAST_TYPE = ["success", "error"] as const;
+export const PAGINATION_IDENTIFIER = ["page", "comment-page"] as const;
 
 export const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_NAME;

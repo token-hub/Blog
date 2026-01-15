@@ -2,6 +2,7 @@ import Blogs from "./blog/blogs";
 import { useBlogs } from "../hooks/useBlogs";
 import BlogPagination from "./Pagination";
 import Loader from "./Loader";
+import { PAGINATION_IDENTIFIER } from "@/lib/constants";
 
 const Home = () => {
     const { blogs, totalCount, loading } = useBlogs({ user: null });
@@ -16,7 +17,7 @@ const Home = () => {
                 {blogs && blogs.length > 0 ? (
                     <>
                         <Blogs blogs={blogs} />
-                        <BlogPagination totalCount={totalCount} />
+                        <BlogPagination identifier={PAGINATION_IDENTIFIER[0]} totalCount={totalCount} />
                     </>
                 ) : (
                     <div className="text-2xl mt-6">Login and create your own blogs :D </div>
