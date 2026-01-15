@@ -4,7 +4,7 @@ import type { blogType } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { Pencil } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import type { AppDispatch, RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { setBlog } from "@/redux/slices/blogSlice";
@@ -15,6 +15,8 @@ const Blog = ({ id, title, created_at, blog, user_id, image_url }: blogType) => 
     const { auth } = useSelector((state: RootState) => state.user);
     const isOwner = user_id === auth.user?.id;
     const imageToUse = image_url ?? "https://placehold.co/160x240?text=default";
+    const location = useLocation();
+    const isHomePage = location.pathname === "/";
 
     function handleSetBlog() {
         dispatch(
@@ -56,7 +58,7 @@ const Blog = ({ id, title, created_at, blog, user_id, image_url }: blogType) => 
                         </div>
                     </div>
                 </Link>
-                {isOwner && (
+                {isOwner && !isHomePage && (
                     <div className="flex gap-2 justify-end mt-2">
                         <Button size="sm" type="button" onClick={handleDelete}>
                             <Trash2 />
