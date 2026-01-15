@@ -1,7 +1,16 @@
+import { Button } from "@/components/ui/button";
 import { transformDate } from "@/lib/utils";
 import type { commentType } from "@/redux/slices/commentSlice";
+import type { RootState } from "@/redux/store";
+import { Pencil, Trash2 } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const SingleComment = ({ comment }: { comment: commentType }) => {
+    const { auth } = useSelector((state: RootState) => state.user);
+    const isOwner = comment.user.id === auth.user?.id;
+    function handleDelete() {}
+    function handleEdit() {}
+
     return (
         <div className="my-3 border-t border-t-gray-300 pt-4">
             <div className="flex">
@@ -15,6 +24,18 @@ const SingleComment = ({ comment }: { comment: commentType }) => {
                 <div className="mt-2">
                     <p className="capitalize m-0 lead font-bold leading-3">{comment.user.email?.split("@")[0]}</p>
                     <p className="m-0 lead">{transformDate(comment.created_at)}</p>
+                </div>
+                <div className="ml-8">
+                    {isOwner && (
+                        <div className="flex gap-2 justify-end mt-2">
+                            <Button size="sm" type="button" onClick={handleDelete}>
+                                <Trash2 />
+                            </Button>
+                            <Button size="sm" type="button" onClick={handleEdit}>
+                                <Pencil />
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </div>
 
