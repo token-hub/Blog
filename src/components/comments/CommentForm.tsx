@@ -2,13 +2,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
+import { customToast } from "@/lib/utils";
 import { commentSchema } from "@/lib/validators";
+import { createComment } from "@/redux/action-creators/commentActions";
+import type { AppDispatch, RootState } from "@/redux/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@radix-ui/react-label";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import type z from "zod";
 
 const Comments = () => {
+    const dispatch = useDispatch<AppDispatch>();
+    const auth = useSelector((state: RootState) => state.user.auth);
+    const { selectedBlog } = useSelector((state: RootState) => state.blog);
     const {
         register,
         handleSubmit,
@@ -19,9 +26,16 @@ const Comments = () => {
 
     const onSubmit: SubmitHandler<z.infer<typeof commentSchema>> = async (data) => {
         try {
-            console.log(data);
+            await dispatch(
+                createComment({
+                    comment: data.comment,
+                    image: data.image ? data.image[0] : undefined,
+                    user_id: auth.user?.id as string,
+                    blog_id: selectedBlog?.id as string,
+                })
+            );
         } catch (error) {
-            console.log(error);
+            customToast({ text: "Something went wrong" });
         }
     };
 
