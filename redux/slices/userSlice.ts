@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { User, Session } from "@supabase/supabase-js";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { getUser } from "../action-creators/userActions";
+import { getUser, loginUser } from "../action-creators/userActions";
 
 type authType = {
     user: User | null;
@@ -43,6 +43,9 @@ export const userSlice = createSlice({
             })
             .addCase(getUser.rejected, (state) => {
                 state.loading = false;
+            })
+            .addCase(loginUser.fulfilled, (state, action: PayloadAction<authType>) => {
+                state.auth = action.payload;
             });
     },
 });
