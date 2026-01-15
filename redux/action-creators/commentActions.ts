@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { supabase } from "../../lib/supabase";
 import { uploadImageToClaudinary } from "../../lib/utils";
-import type { insertCommentType, updateCommentType } from "../../lib/types";
+import type { deleteCommentType, insertCommentType, updateCommentType } from "../../lib/types";
 import { COMMENT_LIMIT, TABLES } from "../../lib/constants";
 
 export const createComment = createAsyncThunk("comments/createComment", async (fields: insertCommentType, thunkApi) => {
@@ -53,12 +53,34 @@ export const getComments = createAsyncThunk("comments/getComments", async ({ pag
             .from("comments")
             .select(`created_at, id, comment, image_url, user: user_profiles (id, email)`)
             .eq("blog_id", blog_id)
+            .eq("isDeleted", false)
             .order("created_at", { ascending: false })
             .limit(COMMENT_LIMIT)
             .range(offset, offset + COMMENT_LIMIT - 1);
 
         const { data, error } = await query;
         if (error) throw error;
+        return data;
+    } catch (error: any) {
+        const message = error.message;
+        return thunkApi.rejectWithValue(message);
+    }
+});
+
+export const deleteComment = createAsyncThunk("blogs/deleteComment", async (fields: deleteCommentType, thunkApi) => {
+    try {
+        const { data, error } = await supabase
+            .from(TABLES[1])
+            .update({
+                user_id: fields.user_id,
+                isDeleted: true,
+            })
+            .eq("id", fields.id);
+
+        if (error) {
+            throw new Error(error.message);
+        }
+
         return data;
     } catch (error: any) {
         const message = error.message;

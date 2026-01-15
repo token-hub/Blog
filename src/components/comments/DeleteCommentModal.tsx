@@ -1,19 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/spinner";
-import { SET_BLOGS_COUNT, TOAST_TYPE } from "@/lib/constants";
+import { TOAST_TYPE } from "@/lib/constants";
 import { customToast, truncateText } from "@/lib/utils";
-import { deleteBlog, getBlogs } from "@/redux/action-creators/blogActions";
-import { getComments } from "@/redux/action-creators/commentActions";
-import { setBlog, setBlogsCount } from "@/redux/slices/blogSlice";
+import { getComments, deleteComment } from "@/redux/action-creators/commentActions";
 import { setComment } from "@/redux/slices/commentSlice";
-import { setCommentDeleteModal, setDeleteModal } from "@/redux/slices/modalSlice";
+import { setCommentDeleteModal } from "@/redux/slices/modalSlice";
 import type { AppDispatch, RootState } from "@/redux/store";
 import { usePage } from "@/src/hooks/usePage";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useTransition } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useSearchParams } from "react-router";
 
 const DeleteCommentDialog = () => {
     const page = usePage();
@@ -40,14 +37,14 @@ const DeleteCommentDialog = () => {
             try {
                 if (selectedComment) {
                     await dispatch(
-                        deleteBlog({
+                        deleteComment({
                             user_id: auth.user!.id,
                             id: selectedComment.id,
                         })
                     ).unwrap();
                     await dispatch(getComments({ page, blog_id: selectedBlog?.id as string }));
                     handleClose();
-                    dispatch(setBlog(null));
+                    dispatch(setComment(null));
                     customToast({ text: "Comment successfully deleted" });
                 }
             } catch (err) {
