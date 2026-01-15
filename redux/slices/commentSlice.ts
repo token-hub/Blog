@@ -9,16 +9,18 @@ export type commentType = {
     comment: string;
     user: userViewType;
     image_url?: string | null;
-};
+} | null;
 
 type commentSliceType = {
     comments: commentType[];
+    selectedComment: commentType;
     loading: boolean;
     error: unknown;
 };
 
 const initialState: commentSliceType = {
     comments: [],
+    selectedComment: null,
     loading: true,
     error: null,
 };
@@ -29,6 +31,9 @@ export const commments = createSlice({
     reducers: {
         setComments: (state, action: PayloadAction<commentType[]>) => {
             state.comments = action.payload;
+        },
+        setComment: (state, action: PayloadAction<commentType>) => {
+            state.selectedComment = action.payload;
         },
         resetState: (state) => {
             state.comments = initialState.comments;
@@ -51,6 +56,6 @@ export const commments = createSlice({
     },
 });
 
-export const { setComments, resetState } = commments.actions;
+export const { setComments, resetState, setComment } = commments.actions;
 
 export default commments.reducer;
