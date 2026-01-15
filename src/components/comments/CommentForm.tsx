@@ -43,29 +43,31 @@ const Comments = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <div>
-                <Label htmlFor="comment">
-                    Comment<span className="text-red-700 mb-2">*</span>
-                </Label>
-                <Textarea {...register("comment")} placeholder="Type your comment" />
-                {errors.comment && <p className="text-sm text-red-500">{errors.comment.message}</p>}
-            </div>
+        <div className="bg-gray-100 p-4">
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div>
+                    <Label htmlFor="comment">
+                        Comment<span className="text-red-700 mb-2">*</span>
+                    </Label>
+                    <Textarea {...register("comment")} className="bg-white" placeholder="Type your comment" />
+                    {errors.comment && <p className="text-sm text-red-500">{errors.comment.message}</p>}
+                </div>
 
-            <div>
-                <Label htmlFor="title" className="mb-2">
-                    Image
-                </Label>
-                <Input {...register("image")} type="file" placeholder="image" />
-                {errors.image && <p className="text-sm text-red-500">{errors.image.message}</p>}
-            </div>
+                <div>
+                    <Label htmlFor="title" className="mb-2">
+                        Image
+                    </Label>
+                    <Input {...register("image")} className="bg-white" type="file" placeholder="image" />
+                    {errors.image && <p className="text-sm text-red-500">{errors.image.message}</p>}
+                </div>
 
-            <div className="flex justify-end">
-                <Button disabled={isSubmitting} type="submit" className="hover:cursor-pointer mt-2">
-                    {isSubmitting && <Spinner />} Submit
-                </Button>
-            </div>
-        </form>
+                <div className="flex justify-end">
+                    <Button disabled={isSubmitting} type="submit" className="hover:cursor-pointer mt-2">
+                        {isSubmitting && <Spinner />} Submit
+                    </Button>
+                </div>
+            </form>
+        </div>
     );
 };
 
