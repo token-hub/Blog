@@ -9,6 +9,9 @@ This is simple blog web Using REACT.
 -   View Blog
 -   Update Blog
 -   Delete Blog
+-   Create comment
+-   Update comment
+-   Delete comment
 
 ## 🧰 Tech Stack
 
