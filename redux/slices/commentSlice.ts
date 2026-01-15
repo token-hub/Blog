@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { userViewType } from "./userSlice";
-import { getComments } from "../action-creators/commentActions";
+import { getCommentCount, getComments } from "../action-creators/commentActions";
 
 export type commentType = {
     id: string;
@@ -14,6 +14,7 @@ export type commentType = {
 type commentSliceType = {
     comments: commentType[];
     selectedComment: commentType | null;
+    totalCount: number;
     loading: boolean;
     error: unknown;
 };
@@ -21,6 +22,7 @@ type commentSliceType = {
 const initialState: commentSliceType = {
     comments: [],
     selectedComment: null,
+    totalCount: 0,
     loading: true,
     error: null,
 };
@@ -52,6 +54,12 @@ export const commments = createSlice({
             .addCase(getComments.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+            .addCase(getCommentCount.fulfilled, (state, action) => {
+                state.loading = false;
+                if (action.payload) {
+                    state.totalCount = action.payload;
+                }
             });
     },
 });

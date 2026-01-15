@@ -4,6 +4,19 @@ import { uploadImageToClaudinary } from "../../lib/utils";
 import type { deleteCommentType, insertCommentType, updateCommentType } from "../../lib/types";
 import { COMMENT_LIMIT, TABLES } from "../../lib/constants";
 
+export const getCommentCount = createAsyncThunk("comments/getCommentCount", async (blog_id: string, thunkApi) => {
+    try {
+        const query = supabase.from("comments").select("*", { count: "exact", head: true }).eq("isDeleted", false).eq("blog_id", blog_id);
+        const { count, error } = await query;
+
+        if (error) throw error;
+        return count;
+    } catch (error: any) {
+        const message = error.message;
+        return thunkApi.rejectWithValue(message);
+    }
+});
+
 export const createComment = createAsyncThunk("comments/createComment", async (fields: insertCommentType, thunkApi) => {
     try {
         const image_url = await uploadImageToClaudinary(fields.image);
