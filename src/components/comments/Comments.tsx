@@ -12,14 +12,20 @@ import { useComments } from "@/src/hooks/useComments";
 const Comments = () => {
     const { selectedBlog } = useSelector((state: RootState) => state.blog);
     const { comments, loading, totalCount } = useComments({ selectedBlog });
+    const auth = useSelector((state: RootState) => state.user.auth);
 
     return (
         <div className="mt-4">
             <EditCommentModal />
             <DeleteCommentDialog />
             <h2 className="text-2xl font-bold">Comments</h2>
-            <hr className="my-3" />
-            <CommentForm />
+
+            {auth.user && (
+                <>
+                    <hr className="my-3" />
+                    <CommentForm />
+                </>
+            )}
             {loading && <Loader />}
             {!loading && comments.length < 1 ? (
                 <div className="flex justify-center items-center">
