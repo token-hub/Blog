@@ -14,6 +14,8 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { commentSchema } from "@/lib/validators";
 import type z from "zod";
+import { useEffect } from "react";
+import { commentDialogDefaultValues } from "@/lib/constants";
 
 const EditCommentModal = () => {
     const dispatch = useDispatch();
@@ -23,7 +25,7 @@ const EditCommentModal = () => {
     const {
         register,
         handleSubmit,
-
+        reset,
         formState: { errors, isSubmitting },
     } = useForm<z.infer<typeof commentSchema>>({
         resolver: zodResolver(commentSchema),
@@ -31,6 +33,18 @@ const EditCommentModal = () => {
             comment: selectedComment?.comment,
         },
     });
+
+    useEffect(() => {
+        if (commentModalOpen && selectedComment) {
+            reset({
+                comment: selectedComment.comment,
+            });
+        }
+
+        if (commentModalOpen && !selectedComment) {
+            reset(commentDialogDefaultValues);
+        }
+    }, [commentModalOpen, selectedComment, reset]);
 
     function handleClose() {
         dispatch(resetState());

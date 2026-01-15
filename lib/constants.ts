@@ -17,6 +17,10 @@ export const blogDialogDefaultValues = {
     blog: "",
 };
 
+export const commentDialogDefaultValues = {
+    comment: "",
+};
+
 export const TABLES = ["blogs", "comments"] as const;
 export const ERROR_CODES = ["23505"];
 export const ERROR_CODES_DESCRIPTION = ["A blog with this title already exists"];
