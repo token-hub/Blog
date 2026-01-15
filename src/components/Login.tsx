@@ -10,13 +10,13 @@ import { loginSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginDefaultValues } from "@/lib/constants";
 import { z } from "zod";
-import { supabase } from "@/lib/supabase";
 import { useDispatch } from "react-redux";
-import { setUser } from "@/redux/slices/userSlice";
+import { loginUser } from "@/redux/action-creators/userActions";
+import type { AppDispatch } from "@/redux/store";
 
 const Login = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
     const {
         register,
@@ -30,16 +30,13 @@ const Login = () => {
 
     const onSubmit: SubmitHandler<z.infer<typeof loginSchema>> = async (fields) => {
         try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: fields.email,
-                password: fields.password,
-            });
+            await dispatch(
+                loginUser({
+                    email: fields.email,
+                    password: fields.password,
+                })
+            );
 
-            if (error) {
-                throw new Error(error.message);
-            }
-
-            dispatch(setUser(data));
             navigate("/");
         } catch (err) {
             if (err instanceof Error) {
