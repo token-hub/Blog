@@ -32,7 +32,7 @@ export const commments = createSlice({
         setComments: (state, action: PayloadAction<commentType[]>) => {
             state.comments = action.payload;
         },
-        setComment: (state, action: PayloadAction<commentType>) => {
+        setComment: (state, action: PayloadAction<commentType | null>) => {
             state.selectedComment = action.payload;
         },
         resetState: (state) => {

@@ -1,13 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { supabase } from "../../lib/supabase";
 import { uploadImageToClaudinary } from "../../lib/utils";
-import type { insertCommentType } from "../../lib/types";
+import type { insertCommentType, updateCommentType } from "../../lib/types";
 import { COMMENT_LIMIT, TABLES } from "../../lib/constants";
 
 export const createComment = createAsyncThunk("comments/createComment", async (fields: insertCommentType, thunkApi) => {
     try {
-        // const image_url = await uploadImageToClaudinary(fields.image);
-        const image_url = null;
+        const image_url = await uploadImageToClaudinary(fields.image);
 
         const { data, error } = await supabase.from(TABLES[1]).insert({
             blog_id: fields.blog_id,
@@ -15,6 +14,28 @@ export const createComment = createAsyncThunk("comments/createComment", async (f
             user_id: fields.user_id,
             image_url,
         });
+
+        if (error) throw error;
+        return data;
+    } catch (error: any) {
+        const message = error.message;
+        return thunkApi.rejectWithValue(message);
+    }
+});
+
+export const updateComment = createAsyncThunk("comments/updateComment", async (fields: updateCommentType, thunkApi) => {
+    try {
+        const image_url = await uploadImageToClaudinary(fields.image);
+
+        const { data, error } = await supabase
+            .from(TABLES[1])
+            .update({
+                id: fields.id,
+                comment: fields.comment,
+                user_id: fields.user_id,
+                image_url,
+            })
+            .eq("id", fields.id);
 
         if (error) throw error;
         return data;

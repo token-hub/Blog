@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import type { RootState } from "@/redux/store";
+import type { AppDispatch, RootState } from "@/redux/store";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useDispatch, useSelector } from "react-redux";
 import { resetState } from "@/redux/slices/modalSlice";
@@ -16,11 +16,17 @@ import { commentSchema } from "@/lib/validators";
 import type z from "zod";
 import { useEffect } from "react";
 import { commentDialogDefaultValues } from "@/lib/constants";
+import { customToast } from "@/lib/utils";
+import { getComments, updateComment } from "@/redux/action-creators/commentActions";
+import { usePage } from "@/src/hooks/usePage";
 
 const EditCommentModal = () => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const { commentModalOpen } = useSelector((state: RootState) => state.modal);
     const { selectedComment } = useSelector((state: RootState) => state.comment);
+    const { selectedBlog } = useSelector((state: RootState) => state.blog);
+    const auth = useSelector((state: RootState) => state.user.auth);
+    const page = usePage();
 
     const {
         register,
@@ -59,9 +65,22 @@ const EditCommentModal = () => {
 
     const onSubmit: SubmitHandler<z.infer<typeof commentSchema>> = async (data) => {
         try {
-            console.log(data);
+            await dispatch(
+                updateComment({
+                    user_id: auth.user!.id,
+                    id: selectedComment?.id as string,
+                    comment: data.comment,
+                    image: data.image ? data.image[0] : undefined,
+                })
+            ).unwrap();
+            await dispatch(getComments({ page, blog_id: selectedBlog?.id as string }));
+
+            customToast({ text: "Blog successfully updated" });
+            dispatch(setComment(null));
+            handleClose();
         } catch (error) {
             console.log(error);
+            customToast({ text: "Something went wrong" });
         }
     };
 
