@@ -28,6 +28,12 @@ const ViewBlog = () => {
 
     return (
         <div className="w-2/4 mx-auto mt-6">
+            {selectedBlog?.image_url && (
+                <div className="mb-4">
+                    <img src={selectedBlog?.image_url} alt={selectedBlog.title} className="w-160 h-100 object-cover rounded-xl"></img>
+                </div>
+            )}
+
             <h1 className="text-4xl mb-4">{capitalizedFirstLetter(selectedBlog!.title)}</h1>
             <p className="text-gray mb-4">{transformDate(selectedBlog!.created_at)}</p>
             <p className="leading-6">{selectedBlog!.blog}</p>

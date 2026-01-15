@@ -14,6 +14,7 @@ const Blog = ({ id, title, created_at, blog, user_id, image_url }: blogType) => 
     const dispatch = useDispatch<AppDispatch>();
     const { auth } = useSelector((state: RootState) => state.user);
     const isOwner = user_id === auth.user?.id;
+    const imageToUse = image_url ?? "https://placehold.co/160x240?text=default";
 
     function handleSetBlog() {
         dispatch(
@@ -42,11 +43,18 @@ const Blog = ({ id, title, created_at, blog, user_id, image_url }: blogType) => 
         <Card className="w-3/4 hover:shadow-xl hover:cursor-pointer mb-4">
             <CardContent>
                 <Link to={id} className="w-full">
-                    <div className="flex justify-between">
-                        <h1 className="text-4xl mb-4">{capitalizedFirstLetter(title)}</h1>
+                    <div className="flex">
+                        <div className="shrink-0 flex items-center">
+                            <img src={imageToUse} alt={title} className="w-60 h-40 object-cover rounded"></img>
+                        </div>
+                        <div className="ml-4">
+                            <div className="flex justify-between">
+                                <h1 className="text-4xl mb-4">{capitalizedFirstLetter(title)}</h1>
+                            </div>
+                            <p className="text-gray mb-4">{transformDate(created_at)}</p>
+                            <p className="leading-6"> {truncateText(blog)}</p>
+                        </div>
                     </div>
-                    <p className="text-gray mb-4">{transformDate(created_at)}</p>
-                    <p className="leading-6"> {truncateText(blog)}</p>
                 </Link>
                 {isOwner && (
                     <div className="flex gap-2 justify-end mt-2">
